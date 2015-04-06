@@ -19,7 +19,7 @@ class LoginSignUpViewController: PFLogInViewController, PFLogInViewControllerDel
         self.logInView.logo = UIImageView(image: UIImage(named: "logo"));
         self.signUpController.signUpView.logo = UIImageView(image: UIImage(named: "logo"));
         
-        self.logInView.logo.contentMode = .Center;
+        self.logInView.logo.contentMode = .Bottom;
         self.signUpController.signUpView.logo.contentMode = UIViewContentMode.Center;
         
         if PFUser.currentUser() != nil {
