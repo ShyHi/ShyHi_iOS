@@ -30,21 +30,21 @@ class ChooseTableViewController: PFQueryTableViewController, UISearchBarDelegate
         searchBar.delegate = self;
     }
 
-    override func queryForTable() -> PFQuery! {
+    override func queryForTable() -> PFQuery {
         let query = PFUser.query();
-        query.whereKey("objectId", notEqualTo: PFUser.currentUser().objectId);
+        query!.whereKey("objectId", notEqualTo: PFUser.currentUser()!.objectId!);
         
         if searchInProgress {
-            query.whereKey("username", containsString: searchString)
+            query!.whereKey("username", containsString: searchString)
         }
         
-        if self.objects.count == 0 {
-            query.cachePolicy = PFCachePolicy.CacheThenNetwork;
+        if self.objects!.count == 0 {
+            query!.cachePolicy = PFCachePolicy.CacheThenNetwork;
         }
         
-        query.orderByAscending("username");
+        query!.orderByAscending("username");
         
-        return query
+        return query!
     }
     
     func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
@@ -58,22 +58,22 @@ class ChooseTableViewController: PFQueryTableViewController, UISearchBarDelegate
         
         if PFUser.currentUser() != nil {
             var user1 = PFUser.currentUser();
-            var user2 = self.objects[indexPath.row] as PFUser;
+            var user2 = self.objects![indexPath.row] as! PFUser;
             
             var room = PFObject(className: "Room");
             
             // Setup the MessageViewController
             let sb = UIStoryboard(name: "Main", bundle: nil);
-            let messagesVC = sb.instantiateViewControllerWithIdentifier("MessagesViewController") as MessagesViewController;
+            let messagesVC = sb.instantiateViewControllerWithIdentifier("MessagesViewController") as! MessagesViewController;
             
-            let pred = NSPredicate(format: "user1 = %@ AND user2 = %@ OR user1 = %@ AND user2 = %@", user1, user2, user2, user1);
+            let pred = NSPredicate(format: "user1 = %@ AND user2 = %@ OR user1 = %@ AND user2 = %@", user1!, user2, user2, user1!);
             
             let roomQuery = PFQuery(className: "Room", predicate: pred);
             
-            roomQuery.findObjectsInBackgroundWithBlock({ (results: [AnyObject]!, error: NSError!) -> Void in
+            roomQuery.findObjectsInBackgroundWithBlock({ (results: [AnyObject]?, error: NSError?) -> Void in
                 if error == nil {
-                    if results.count > 0 {
-                        room = results.last as PFObject;
+                    if results!.count > 0 {
+                        room = results!.last as! PFObject;
                         // Setup MessageViewController and Push to the MessageVC
                         messagesVC.room = room;
                         messagesVC.incomingUser = user2;
@@ -82,7 +82,7 @@ class ChooseTableViewController: PFQueryTableViewController, UISearchBarDelegate
                         room["user1"] = user1;
                         room["user2"] = user2;
                         
-                        room.saveInBackgroundWithBlock({ (success: Bool!, error: NSError!) -> Void in
+                        room.saveInBackgroundWithBlock({ (success, error) -> Void in
                             if error == nil {
                                 // Setup MessageViewController and Push to the MessageVC
                                 messagesVC.room = room;

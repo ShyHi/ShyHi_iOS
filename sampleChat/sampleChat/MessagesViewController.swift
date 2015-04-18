@@ -27,15 +27,15 @@ class MessagesViewController: JSQMessagesViewController {
         super.viewDidLoad()
 
         self.title = "Messages";
-        self.senderId = PFUser.currentUser().objectId;
-        self.senderDisplayName = PFUser.currentUser().username;
+        self.senderId = PFUser.currentUser()!.objectId;
+        self.senderDisplayName = PFUser.currentUser()!.username;
         
-        let selfUsername = PFUser.currentUser().username as NSString;
-        let incomingUsername = incomingUser.username as NSString;
+        let selfUsername = PFUser.currentUser()!.username;
+        let incomingUsername = incomingUser.username;
         
-        selfAvatar = JSQMessagesAvatarImageFactory.avatarImageWithUserInitials(selfUsername.substringWithRange(NSMakeRange(0, 2)), backgroundColor: UIColor.blackColor(), textColor: UIColor.whiteColor(), font: UIFont.systemFontOfSize(14), diameter: UInt(kJSQMessagesCollectionViewAvatarSizeDefault));
+        //selfAvatar = JSQMessagesAvatarImageFactory.avatarImageWithUserInitials(selfUsername.substringWithRange(NSMakeRange(0, 2)), backgroundColor: UIColor.blackColor(), textColor: UIColor.whiteColor(), font: UIFont.systemFontOfSize(14), diameter: UInt(kJSQMessagesCollectionViewAvatarSizeDefault));
         
-        incomingAvatar = JSQMessagesAvatarImageFactory.avatarImageWithUserInitials(incomingUsername.substringWithRange(NSMakeRange(0, 2)), backgroundColor: UIColor.blackColor(), textColor: UIColor.whiteColor(), font: UIFont.systemFontOfSize(14), diameter: UInt(kJSQMessagesCollectionViewAvatarSizeDefault));
+        //incomingAvatar = JSQMessagesAvatarImageFactory.avatarImageWithUserInitials(incomingUsername.substringWithRange(NSMakeRange(0, 2)), backgroundColor: UIColor.blackColor(), textColor: UIColor.whiteColor(), font: UIFont.systemFontOfSize(14), diameter: UInt(kJSQMessagesCollectionViewAvatarSizeDefault));
         
         let bubbleFactory = JSQMessagesBubbleImageFactory();
         
@@ -64,21 +64,21 @@ class MessagesViewController: JSQMessagesViewController {
             messageQuery.whereKey("createdAt", greaterThan: lastMessage!.date);
         }
         
-        messageQuery.findObjectsInBackgroundWithBlock { (results: [AnyObject]!, error: NSError!) -> Void in
+        messageQuery.findObjectsInBackgroundWithBlock { (objects: [AnyObject]?, error: NSError?) -> Void in
             if error == nil {
-                let messages = results as [PFObject]
+                let messages = objects as! [PFObject]
                 
                 for message in messages {
                     self.messagingObjects.append(message);
                     
-                    let user = message["user"] as PFUser;
+                    let user = message["user"] as! PFUser;
                     self.users.append(user);
                     
-                    let chatMessage = JSQMessage(senderId: user.objectId, senderDisplayName: user.username, date: message.createdAt, text: message["content"] as String);
+                    let chatMessage = JSQMessage(senderId: user.objectId, senderDisplayName: user.username, date: message.createdAt, text: message["content"] as! String);
                     self.messages.append(chatMessage);
                 }
                 
-                if results.count != 0 {
+                if objects!.count != 0 {
                     self.finishReceivingMessage();
                 }
             }
@@ -93,14 +93,14 @@ class MessagesViewController: JSQMessagesViewController {
         message["room"] = room;
         message["user"] = PFUser.currentUser();
         
-        message.saveInBackgroundWithBlock { (success: Bool!, error: NSError!) -> Void in
+        message.saveInBackgroundWithBlock { (success, error) -> Void in
             if error == nil {
                 self.loadMessages();
                 self.room["lastUpdate"] = NSDate();
                 self.room.saveInBackgroundWithBlock(nil);
             }
             else {
-                println("eeror sending message \(error.localizedDescription)");
+                println("eeror sending message \(error!.localizedDescription)");
             }
         }
         self.finishSendingMessage();
@@ -151,7 +151,7 @@ class MessagesViewController: JSQMessagesViewController {
     }
     
     override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = super.collectionView(collectionView, cellForItemAtIndexPath: indexPath) as JSQMessagesCollectionViewCell;
+        let cell = super.collectionView(collectionView, cellForItemAtIndexPath: indexPath) as! JSQMessagesCollectionViewCell;
         
         let message = messages[indexPath.row];
         

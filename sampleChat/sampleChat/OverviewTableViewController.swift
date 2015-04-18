@@ -37,26 +37,26 @@ class OverviewTableViewController: UITableViewController {
         
         self.tableView.reloadData();
         
-        let pred = NSPredicate(format: "user1 = %@ OR user2 = %@", PFUser.currentUser(), PFUser.currentUser());
+        let pred = NSPredicate(format: "user1 = %@ OR user2 = %@", PFUser.currentUser()!, PFUser.currentUser()!);
         
         let roomQuery = PFQuery(className: "Room", predicate: pred);
         roomQuery.orderByDescending("lastUpdate");
         roomQuery.includeKey("user1");
         roomQuery.includeKey("user2");
         
-        roomQuery.findObjectsInBackgroundWithBlock { (results: [AnyObject]!, error: NSError!) -> Void in
+        roomQuery.findObjectsInBackgroundWithBlock { (objects: [AnyObject]?, error: NSError?) -> Void in
             if error == nil {
-                self.rooms = results as [PFObject]
+                self.rooms = objects as! [PFObject]
                 
                 for room in self.rooms {
-                    let user1 = room.objectForKey("user1") as PFUser;
-                    let user2 = room["user2"] as PFUser;
+                    let user1 = room.objectForKey("user1") as! PFUser;
+                    let user2 = room["user2"] as! PFUser;
                     
-                    if user1.objectId != PFUser.currentUser().objectId {
+                    if user1.objectId != PFUser.currentUser()!.objectId {
                         self.users.append(user1);
                     }
                     
-                    if user2.objectId != PFUser.currentUser().objectId {
+                    if user2.objectId != PFUser.currentUser()!.objectId {
                         self.users.append(user2);
                     }
                 }
@@ -85,7 +85,7 @@ class OverviewTableViewController: UITableViewController {
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as OverviewTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! OverviewTableViewCell
 
         let targetUser = users[indexPath.row];
         
@@ -94,23 +94,23 @@ class OverviewTableViewController: UITableViewController {
         let user1 = PFUser.currentUser();
         let user2 = users[indexPath.row];
         
-        let pred = NSPredicate(format: "user1 = %@ AND user2 = %@ OR user1 = %@ AND user2 = %@", user1, user2, user2, user1);
+        let pred = NSPredicate(format: "user1 = %@ AND user2 = %@ OR user1 = %@ AND user2 = %@", user1!, user2, user2, user1!);
         
         let roomQuery = PFQuery(className: "Room", predicate: pred);
         
-        roomQuery.findObjectsInBackgroundWithBlock { (results: [AnyObject]!, error: NSError!) -> Void in
+        roomQuery.findObjectsInBackgroundWithBlock { (objects: [AnyObject]?, error: NSError?) -> Void in
             if error == nil {
-                if results.count > 0 {
+                if objects!.count > 0 {
                     let messageQuery = PFQuery(className: "Message");
-                    let room = results.last as PFObject;
+                    let room = objects!.last as! PFObject;
                     
                     messageQuery.whereKey("room", equalTo: room);
                     messageQuery.limit = 1;
                     messageQuery.orderByDescending("createdAt");
-                    messageQuery.findObjectsInBackgroundWithBlock({ (results: [AnyObject]!, error: NSError!) -> Void in
+                    messageQuery.findObjectsInBackgroundWithBlock({ (results: [AnyObject]?, error: NSError?) -> Void in
                         if error == nil {
-                            if results.count > 0 {
-                                let message = results.last as PFObject;
+                            if results!.count > 0 {
+                                let message = objects!.last as! PFObject;
                             
                                 cell.lastMessageLabel.text = message["content"] as? String;
                             
@@ -128,7 +128,7 @@ class OverviewTableViewController: UITableViewController {
                                 else if interval > 1 {
                                     let dateFormat = NSDateFormatter();
                                     dateFormat.dateFormat = "mm/dd/yyyy";
-                                    dateString = dateFormat.stringFromDate(message.createdAt);
+                                    dateString = dateFormat.stringFromDate(message.createdAt!);
                                 }
                                 
                                 cell.dateLabel.text = dateString as String;
@@ -146,17 +146,17 @@ class OverviewTableViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let sb = UIStoryboard(name: "Main", bundle: nil);
-        let messagesVC = sb.instantiateViewControllerWithIdentifier("MessagesViewController") as MessagesViewController;
+        let messagesVC = sb.instantiateViewControllerWithIdentifier("MessagesViewController") as! MessagesViewController;
         let user1 = PFUser.currentUser();
         let user2 = users[indexPath.row];
         
-        let pred = NSPredicate(format: "user1 = %@ AND user2 = %@ OR user1 = %@ AND user2 = %@", user1, user2, user2, user1);
+        let pred = NSPredicate(format: "user1 = %@ AND user2 = %@ OR user1 = %@ AND user2 = %@", user1!, user2, user2, user1!);
         
         let roomQuery = PFQuery(className: "Room", predicate: pred);
         
-        roomQuery.findObjectsInBackgroundWithBlock { ( results: [AnyObject]!, error: NSError!) -> Void in
+        roomQuery.findObjectsInBackgroundWithBlock { ( objects: [AnyObject]?, error: NSError?) -> Void in
             if error == nil {
-                let room = results.last as PFObject
+                let room = objects!.last as! PFObject
                 messagesVC.room = room;
                 messagesVC.incomingUser = user2;
                 
