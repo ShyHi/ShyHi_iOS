@@ -2,8 +2,8 @@
 //  AppDelegate.swift
 //  ShyHi
 //
-//  Created by Jonathan Amato on 3/30/15.
-//  Copyright (c) 2015 CPSC-348. All rights reserved.
+//  Created by Tae Hwan Lee on 4/26/15.
+//  Copyright (c) 2015 ShyHi. All rights reserved.
 //
 
 import UIKit
@@ -15,7 +15,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        // Override point for customization after application launch.
+        
+        Parse.setApplicationId("mopJ7DcD9COGXSCr2P2PW3vBdp5It2q788dZNDci",
+            clientKey: "TE1WyGRN1ngXopm2dYQoXw3AM1Bxqwb1cavjLBBa")
+        
         return true
     }
 

@@ -2,8 +2,8 @@
 //  ShyHiTests.swift
 //  ShyHiTests
 //
-//  Created by Jonathan Amato on 3/30/15.
-//  Copyright (c) 2015 CPSC-348. All rights reserved.
+//  Created by Tae Hwan Lee on 4/26/15.
+//  Copyright (c) 2015 ShyHi. All rights reserved.
 //
 
 import UIKit

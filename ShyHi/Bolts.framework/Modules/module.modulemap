@@ -1,0 +1,18 @@
+framework module Bolts {
+  umbrella header "Bolts.h"
+
+  export *
+  module * { export * }
+  
+  explicit module BFAppLinkResolving {
+      header "BFAppLinkResolving.h"
+      link "BFAppLinkResolving"
+      export *
+  }
+  
+  explicit module BFWebViewAppLinkResolver {
+      header "BFWebViewAppLinkResolver.h"
+      link "BFAWebViewAppLinkResolver"
+      export *
+  }
+}
