@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7531" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="L2f-Sz-Ya4">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="L2f-Sz-Ya4">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7520"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
     </dependencies>
     <scenes>
         <!--Navigation Controller-->
         <scene sceneID="xwo-AG-oXQ">
             <objects>
                 <navigationController id="L2f-Sz-Ya4" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="DWv-9y-MDV">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="DWv-9y-MDV">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -33,21 +32,35 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YkM-24-lIp">
-                                <rect key="frame" x="131" y="269" width="46" height="30"/>
-                                <state key="normal" title="Button">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YkM-24-lIp">
+                                <rect key="frame" x="118" y="457" width="85" height="36"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="85" id="GnJ-w4-m5o"/>
+                                    <constraint firstAttribute="height" constant="36" id="tqK-Ua-Mzd"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
+                                <state key="normal" title="New Chat">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
                                     <action selector="NewChatButton_Click:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="FTM-Tg-KjW"/>
                                 </connections>
                             </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo" translatesAutoresizingMaskIntoConstraints="NO" id="fgl-T8-0Y3">
+                                <rect key="frame" x="30" y="114" width="260" height="260"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="260" id="9zQ-iY-XyZ"/>
+                                    <constraint firstAttribute="width" constant="260" id="HEO-2G-VGP"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstItem="YkM-24-lIp" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" constant="115" id="4wc-xk-ts9"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="YkM-24-lIp" secondAttribute="trailing" constant="127" id="i6V-X6-GoO"/>
-                            <constraint firstAttribute="centerX" secondItem="YkM-24-lIp" secondAttribute="centerX" constant="6" id="yjc-ev-XN3"/>
+                            <constraint firstItem="fgl-T8-0Y3" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="50" id="1IN-Rl-S2q"/>
+                            <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="YkM-24-lIp" secondAttribute="bottom" constant="75" id="Xdb-xg-l1Q"/>
+                            <constraint firstAttribute="centerX" secondItem="YkM-24-lIp" secondAttribute="centerX" id="YoA-ia-hBK"/>
+                            <constraint firstAttribute="centerX" secondItem="fgl-T8-0Y3" secondAttribute="centerX" id="nIN-Fs-Aeh"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="M82-AN-iOd"/>
@@ -57,9 +70,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="391.46666666666664" y="-39.759999999999998"/>
+            <point key="canvasLocation" x="391" y="-40"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="logo" width="634" height="634"/>
+    </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
