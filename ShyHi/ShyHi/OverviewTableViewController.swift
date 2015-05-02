@@ -23,6 +23,7 @@ class OverviewTableViewController: UITableViewController {
         
     }
     
+    //load controller data if user is present
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated);
         
@@ -31,6 +32,7 @@ class OverviewTableViewController: UITableViewController {
         }
     }
     
+    //establish conversations from Parse room/users
     func loadData(){
         rooms = [PFObject]()
         users = [PFUser]()

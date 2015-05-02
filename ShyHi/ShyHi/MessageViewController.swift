@@ -8,6 +8,8 @@
 
 import UIKit
 
+//view controller for chat room with two users
+
 class MessageViewController: JSQMessagesViewController {
     
     var room:PFObject!
@@ -26,6 +28,8 @@ class MessageViewController: JSQMessagesViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //Parse methods to setup chat if view loaded properly
         
         self.title = "Messages"
         self.senderId = PFUser.currentUser()!.objectId
@@ -71,6 +75,7 @@ class MessageViewController: JSQMessagesViewController {
             lastMessage = messages.last
         }
         
+        //pull messages from Parse
         
         let messageQuery = PFQuery(className: "Message")
         messageQuery.whereKey("room", equalTo: room)
@@ -113,6 +118,7 @@ class MessageViewController: JSQMessagesViewController {
         message["room"] = room
         message["user"] = PFUser.currentUser()
         
+        //push messages from Parse
         
         message.saveInBackgroundWithBlock { (success:Bool, error:NSError?) -> Void in
             if error == nil {
