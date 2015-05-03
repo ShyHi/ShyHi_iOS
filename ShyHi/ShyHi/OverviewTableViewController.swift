@@ -7,10 +7,18 @@
 //
 
 import UIKit
+import CoreLocation
 
-class OverviewTableViewController: UITableViewController {
+class OverviewTableViewController: UITableViewController, CLLocationManagerDelegate {
 
     @IBOutlet weak var NewChatButton: UIBarButtonItem!
+    
+    let locationManager = CLLocationManager()
+    var lat: Double = 0;
+    var long: Double = 0;
+    var count = 1;
+    
+    var userArray = [PFUser]();
     
     // Arrays of rooms and users
     var rooms = [PFObject]();
@@ -21,6 +29,11 @@ class OverviewTableViewController: UITableViewController {
         
         self.navigationItem.setRightBarButtonItem(NewChatButton, animated: false);
         
+        
+        self.locationManager.delegate = self
+        self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        self.locationManager.requestWhenInUseAuthorization()
+        self.locationManager.startUpdatingLocation()
     }
     
     //load controller data if user is present
@@ -68,12 +81,60 @@ class OverviewTableViewController: UITableViewController {
                 
             }
         }
+    }
+    
+    func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!) {
         
+        CLGeocoder().reverseGeocodeLocation(manager.location, completionHandler: {(placemarks, error)->Void in
+            
+            if (error != nil) {
+                println("Error: " + error.localizedDescription);
+                return
+            }
+            
+            if placemarks.count > 0 {
+                
+                let pm = placemarks[0] as! CLPlacemark;
+                self.displayLocationInfo(pm);
+                
+            } else {
+                
+                println("Error with the data.");
+                
+            }
+        })
+    }
+    
+    func displayLocationInfo(placemark: CLPlacemark) {
+        
+        self.locationManager.stopUpdatingLocation();
+        // Console messages
+        println(placemark.locality);
+        println(placemark.postalCode);
+        println(placemark.administrativeArea);
+        println(placemark.country);
+        println(placemark.location.coordinate.latitude);
+        println(placemark.location.coordinate.longitude);
+        
+        // Storing location data on parse
+        self.lat = placemark.location.coordinate.latitude;
+        self.long = placemark.location.coordinate.longitude;
+        var point = PFGeoPoint(latitude: lat, longitude: long);
+        
+        if let updateObject = PFUser.currentUser() as PFObject? {
+            updateObject["Location"] = point;
+            updateObject.saveEventually();
+        } else {
+            var updateObject = PFObject(className: "_User");
+            updateObject["Location"] = point;
+            updateObject.saveEventually();
+        }
         
     }
-
-
-
+    
+    func locationManager(manager: CLLocationManager!, didFailWithError error: NSError!) {
+        println("Error: " + error.localizedDescription);
+    }
 
     // MARK: - Table view data source
 
@@ -99,8 +160,8 @@ class OverviewTableViewController: UITableViewController {
         
         let targetUser = users[indexPath.row]
         
-        cell.nameLabel.text = targetUser.username
-        
+//        cell.nameLabel.text = targetUser.username
+//        cell.nameLabel.text = "Anonymous \(count)";
         let user1 = PFUser.currentUser()
         let user2 = users[indexPath.row]
         
@@ -148,9 +209,6 @@ class OverviewTableViewController: UITableViewController {
                 }
             }
         }
-        
-        
-        
         return cell
     }
     
@@ -175,10 +233,78 @@ class OverviewTableViewController: UITableViewController {
                 
             }
         }
-        
-        
     }
 
+    @IBAction func NewChatButton_Click(sender: AnyObject) {
+        
+        self.locationManager.delegate = self
+        self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        self.locationManager.requestWhenInUseAuthorization()
+        self.locationManager.startUpdatingLocation()
+        
+        var point2 = PFGeoPoint(latitude: self.lat, longitude: self.long)
+//        var point2 = PFGeoPoint(latitude: 37.3, longitude: -122.0)
+        var query = PFQuery(className: "_User")
+        query.whereKey("Location", nearGeoPoint: point2, withinMiles: 50)
+        query.limit = 30;
+        
+        query.findObjectsInBackgroundWithBlock { (objects: [AnyObject]?, error: NSError?) -> Void in
+            if (error == nil) {
+                println("Found something");
+                for object in objects! {
+                    self.userArray.append(object as! PFUser);
+                    println(object.objectId);
+                }
+            }
+            else {
+                println("%@", error)
+            }
+        }
+        
+        if (PFUser.currentUser() != nil && userArray.isEmpty == false) {
+            
+            //let randomIndex = Int(arc4random_uniform(UInt32(userArray)));
+            var user1 = PFUser.currentUser();
+            var user2 = userArray[0] as PFUser;
+            var room = PFObject(className: "Room");
+            
+            // Setting up the MessageViewController
+            let sb = UIStoryboard(name: "Main", bundle: nil)
+            let messageVC = sb.instantiateViewControllerWithIdentifier("MessageViewController") as! MessageViewController
+            let pred = NSPredicate(format: "user1 = %@ AND user2 = %@ OR user1 = %@ AND user2 = %@", user1!, user2, user2, user1!);
+            let roomQuery = PFQuery(className: "Room", predicate: pred);
+            
+            roomQuery.findObjectsInBackgroundWithBlock({ (results: [AnyObject]?, error: NSError?) -> Void in
+                if error == nil {
+                    if results!.count > 0 { // room already exists
+                        let title = "Error";
+                        let message = "No new user"
+                        let okText = "OK";
+                        
+                        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert);
+                        
+                        let okayButton = UIAlertAction(title: okText, style: UIAlertActionStyle.Cancel, handler: nil);
+                        
+                        alert.addAction(okayButton);
+                        self.presentViewController(alert, animated: true, completion: nil);
+                    }
+                    else {
+                        room["user1"] = user1;
+                        room["user2"] = user2;
+                        
+                        room.saveInBackgroundWithBlock({ (success: Bool, error: NSError?) -> Void in
+                            if error == nil {
+                                // Setup MessageViewController and Push to the MessageVC
+                                messageVC.room = room
+                                messageVC.incomingUser = user2
+                                self.navigationController?.pushViewController(messageVC, animated: true)
+                            }
+                        })
+                    }
+                }
+            })
+        }
+    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

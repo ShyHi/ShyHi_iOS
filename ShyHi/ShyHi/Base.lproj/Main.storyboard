@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="L2f-Sz-Ya4">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7531" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="L2f-Sz-Ya4">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7520"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -134,12 +134,17 @@
                         </connections>
                     </tableView>
                     <toolbarItems>
-                        <barButtonItem title="New Chat" id="Hfi-m9-DFp"/>
+                        <barButtonItem title="New Chat" id="Hfi-m9-DFp">
+                            <connections>
+                                <action selector="NewChatButton_Click:" destination="7V0-K8-xHK" id="dZJ-sb-MFy"/>
+                            </connections>
+                        </barButtonItem>
                     </toolbarItems>
                     <navigationItem key="navigationItem" id="lHn-fE-UtT"/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="NewChatButton" destination="Hfi-m9-DFp" id="HSH-RM-pn4"/>
+                        <segue destination="xkz-bZ-GQc" kind="push" id="b8C-r0-hYI"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Qta-dK-YZn" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -159,11 +164,21 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
+                    <toolbarItems>
+                        <barButtonItem title="Back" id="B7b-9A-nQy">
+                            <connections>
+                                <action selector="BackButton_Click:" destination="xkz-bZ-GQc" id="4Le-qP-zH3"/>
+                            </connections>
+                        </barButtonItem>
+                    </toolbarItems>
                     <navigationItem key="navigationItem" id="SjJ-21-LRg"/>
+                    <connections>
+                        <outlet property="BackButton" destination="B7b-9A-nQy" id="bgb-zh-1Zx"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7Me-aM-255" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="603" y="749"/>
+            <point key="canvasLocation" x="1211" y="-40"/>
         </scene>
     </scenes>
     <resources>

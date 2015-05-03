@@ -12,6 +12,8 @@ import UIKit
 
 class MessageViewController: JSQMessagesViewController {
     
+    @IBOutlet weak var BackButton: UIBarButtonItem!
+    
     var room:PFObject!
     var incomingUser:PFUser!
     var users = [PFUser]()
@@ -29,6 +31,8 @@ class MessageViewController: JSQMessagesViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.navigationItem.setLeftBarButtonItem(BackButton, animated: false);
+
         //Parse methods to setup chat if view loaded properly
         
         self.title = "Messages"
@@ -40,9 +44,14 @@ class MessageViewController: JSQMessagesViewController {
         let selfUsername = String(stringInterpolationSegment: PFUser.currentUser()!.username) as NSString
         let incomingUsername = String(stringInterpolationSegment: incomingUser.username) as NSString
         
-        selfAvatar = JSQMessagesAvatarImageFactory.avatarImageWithUserInitials(selfUsername.substringWithRange(NSMakeRange(0, 2)), backgroundColor: UIColor.blackColor(), textColor: UIColor.whiteColor(), font: UIFont.systemFontOfSize(14), diameter: UInt(kJSQMessagesCollectionViewAvatarSizeDefault))
         
-        incomingAvatar = JSQMessagesAvatarImageFactory.avatarImageWithUserInitials(incomingUsername.substringWithRange(NSMakeRange(0, 2)), backgroundColor: UIColor.blackColor(), textColor: UIColor.whiteColor(), font: UIFont.systemFontOfSize(14), diameter: UInt(kJSQMessagesCollectionViewAvatarSizeDefault))
+//        selfAvatar = JSQMessagesAvatarImageFactory.avatarImageWithUserInitials(selfUsername.substringWithRange(NSMakeRange(0, 2)), backgroundColor: UIColor.blackColor(), textColor: UIColor.whiteColor(), font: UIFont.systemFontOfSize(14), diameter: UInt(kJSQMessagesCollectionViewAvatarSizeDefault))
+        
+        selfAvatar = JSQMessagesAvatarImageFactory.avatarImageWithUserInitials("You", backgroundColor: UIColor.blackColor(), textColor: UIColor.whiteColor(), font: UIFont.systemFontOfSize(14), diameter: UInt(kJSQMessagesCollectionViewAvatarSizeDefault))
+//        
+//        incomingAvatar = JSQMessagesAvatarImageFactory.avatarImageWithUserInitials(incomingUsername.substringWithRange(NSMakeRange(0, 2)), backgroundColor: UIColor.blackColor(), textColor: UIColor.whiteColor(), font: UIFont.systemFontOfSize(14), diameter: UInt(kJSQMessagesCollectionViewAvatarSizeDefault))
+        
+        incomingAvatar = JSQMessagesAvatarImageFactory.avatarImageWithUserInitials("Anon", backgroundColor: UIColor.blackColor(), textColor: UIColor.whiteColor(), font: UIFont.systemFontOfSize(14), diameter: UInt(kJSQMessagesCollectionViewAvatarSizeDefault))
         
         let bubbleFactory = JSQMessagesBubbleImageFactory()
         
@@ -113,6 +122,7 @@ class MessageViewController: JSQMessagesViewController {
     
     // MARK: - SEND MESSAGES
     override func didPressSendButton(button: UIButton!, withMessageText text: String!, senderId: String!, senderDisplayName: String!, date: NSDate!) {
+        
         let message = PFObject(className: "Message")
         message["content"] = text
         message["room"] = room
@@ -123,7 +133,6 @@ class MessageViewController: JSQMessagesViewController {
         message.saveInBackgroundWithBlock { (success:Bool, error:NSError?) -> Void in
             if error == nil {
                 self.loadMessages()
-                
                 
                 let pushQuery = PFInstallation.query()
                 pushQuery!.whereKey("user", equalTo: self.incomingUser)
@@ -139,6 +148,11 @@ class MessageViewController: JSQMessagesViewController {
                 
                 self.room["lastUpdate"] = NSDate()
                 self.room.saveInBackgroundWithBlock(nil)
+                
+                let unreadMessage = PFObject(className: "UnreadMessage")
+                unreadMessage["user"] = self.incomingUser
+                unreadMessage["room"] = self.room
+                unreadMessage.saveInBackgroundWithBlock(nil)
                 
             }else{
                 println("error sending message \(error!.localizedDescription)")
@@ -219,6 +233,16 @@ class MessageViewController: JSQMessagesViewController {
         return messages.count
     }
     
+    func showChatOverview() {
+        let sb = UIStoryboard(name: "Main", bundle: nil);
+        let overviewVC = sb.instantiateViewControllerWithIdentifier("ChatOverviewVC") as! OverviewTableViewController;
+        overviewVC.navigationItem.setHidesBackButton(true, animated: false);
+        self.navigationController?.pushViewController(overviewVC, animated: true);
+    }
+    
+    @IBAction func BackButton_Click(sender: AnyObject) {
+        self.showChatOverview();
+    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
