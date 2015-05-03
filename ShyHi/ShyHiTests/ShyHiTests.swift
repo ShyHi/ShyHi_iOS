@@ -2,34 +2,41 @@
 //  ShyHiTests.swift
 //  ShyHiTests
 //
-//  Created by Tae Hwan Lee on 4/26/15.
+//  Created by Jonathan Amato on 4/29/15.
 //  Copyright (c) 2015 ShyHi. All rights reserved.
 //
 
 import UIKit
 import XCTest
+//import ShyHi
 
 class ShyHiTests: XCTestCase {
     
+   // var vc:NewChatViewController = NewChatViewController()
+    
     override func setUp() {
         super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+        /*
+        var storyboard:UIStoryboard = UIStoryboard(name: "Main", bundle: NSBundle(forClass: self.dynamicType))
+        vc = storyboard.instantiateViewControllerWithIdentifier("MyStoryboard") as! NewChatViewController
+        vc.loadView()
+        vc.viewDidLoad()
+        */
     }
     
     override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
         super.tearDown()
     }
     
-    func testExample() {
-        // This is an example of a functional test case.
-        XCTAssert(true, "Pass")
+    /*
+    func testNewChatButtonTextDidLoad() {
+        //assert our new chat button has loaded
+        XCTAssertTrue(vc.NewChatButton.text == "New Chat", "New Chat Button is not set, it is currently \(vc.NewChatButton.text)")
     }
+    */
     
     func testPerformanceExample() {
-        // This is an example of a performance test case.
         self.measureBlock() {
-            // Put the code you want to measure the time of here.
         }
     }
     
