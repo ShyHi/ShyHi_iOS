@@ -20,10 +20,6 @@ class NewChatViewController: UIViewController, CLLocationManagerDelegate {
     
     var userArray = [PFUser]();
     
-    override func shouldAutorotate() -> Bool {
-        return false;
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -176,7 +172,7 @@ class NewChatViewController: UIViewController, CLLocationManagerDelegate {
                                         messageVC.room = room
                                         messageVC.incomingUser = user2
                                         self.navigationController?.pushViewController(messageVC, animated: true)
-                                        return;
+                                        
                                     }
                                 })
                             }

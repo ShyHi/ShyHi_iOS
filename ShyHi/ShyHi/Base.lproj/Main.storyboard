@@ -144,7 +144,7 @@
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="NewChatButton" destination="Hfi-m9-DFp" id="HSH-RM-pn4"/>
-                        <segue destination="xkz-bZ-GQc" kind="push" id="b8C-r0-hYI"/>
+                        <segue destination="xkz-bZ-GQc" kind="push" identifier="ShowMessage" id="b8C-r0-hYI"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Qta-dK-YZn" userLabel="First Responder" sceneMemberID="firstResponder"/>
