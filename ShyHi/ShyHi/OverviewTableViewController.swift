@@ -161,9 +161,7 @@ class OverviewTableViewController: UITableViewController, CLLocationManagerDeleg
         let user1 = PFUser.currentUser()
         let user2 = users[indexPath.row]
         
-        
 
-        
         
         
         let pred = NSPredicate(format: "user1 = %@ AND user2 = %@ OR user1 = %@ AND user2 = %@", user1!, user2, user2, user1!)
@@ -192,7 +190,8 @@ class OverviewTableViewController: UITableViewController, CLLocationManagerDeleg
                     messageQuery.whereKey("room", equalTo: room)
                     messageQuery.limit = 1
                     messageQuery.orderByDescending("createdAt")
-                    messageQuery.findObjectsInBackgroundWithBlock({ (results:[AnyObject]?, error:NSError?) -> Void in
+                    messageQuery.findObjectsInBackgroundWithBlock({ (results:[AnyObject]?, error:NSError?
+                        ) -> Void in
                         if error == nil {
                             if results!.count > 0 {
                                 let message = results!.last as! PFObject
