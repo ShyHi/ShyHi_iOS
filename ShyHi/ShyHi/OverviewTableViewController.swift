@@ -10,15 +10,11 @@ import UIKit
 import CoreLocation
 
 class OverviewTableViewController: UITableViewController, CLLocationManagerDelegate {
-
+    
     @IBOutlet weak var NewChatButton: UIBarButtonItem!
     
     let locationManager = CLLocationManager()
-
     var point: PFGeoPoint = PFGeoPoint(latitude: 0, longitude: 0);
-
-    var count = 1;
-    
     var userArray = [PFUser]();
     
     // Arrays of rooms and users
@@ -158,8 +154,8 @@ class OverviewTableViewController: UITableViewController, CLLocationManagerDeleg
         
         let targetUser = users[indexPath.row]
         
-//        cell.nameLabel.text = targetUser.username
-//        cell.nameLabel.text = "Anonymous \(count)";
+        //cell.nameLabel.text = targetUser.username
+        cell.nameLabel.text = "Anonymous";
         let user1 = PFUser.currentUser()
         let user2 = users[indexPath.row]
         
@@ -270,9 +266,8 @@ class OverviewTableViewController: UITableViewController, CLLocationManagerDeleg
                 println("%@", error)
             }
         }
-        
+
         if (PFUser.currentUser() != nil && userArray.isEmpty == false) {
-            
             for user in userArray{
                 if (user.objectId != PFUser.currentUser()?.objectId) {
                     
@@ -303,7 +298,6 @@ class OverviewTableViewController: UITableViewController, CLLocationManagerDeleg
                                         messageVC.room = room
                                         messageVC.incomingUser = user2
                                         self.navigationController?.pushViewController(messageVC, animated: true)
-                                        
                                     }
                                 })
                             }

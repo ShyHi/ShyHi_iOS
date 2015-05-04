@@ -15,8 +15,6 @@ class NewChatViewController: UIViewController, CLLocationManagerDelegate {
     
     let locationManager = CLLocationManager()
     var point: PFGeoPoint = PFGeoPoint(latitude: 0, longitude: 0);
-//    var lat: Double = 0;
-//    var long: Double = 0;
     
     var userArray = [PFUser]();
     
@@ -30,6 +28,11 @@ class NewChatViewController: UIViewController, CLLocationManagerDelegate {
         PFUser.enableAutomaticUser();
         PFUser.currentUser()!.incrementKey("RunCount");
         PFUser.currentUser()!.saveInBackground();
+        
+        self.locationManager.delegate = self
+        self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        self.locationManager.requestWhenInUseAuthorization()
+        self.locationManager.startUpdatingLocation()
     }
     
     
@@ -74,10 +77,7 @@ class NewChatViewController: UIViewController, CLLocationManagerDelegate {
         // Storing location data on parse
         var lat: Double = placemark.location.coordinate.latitude;
         var long: Double = placemark.location.coordinate.longitude;
-//        var point = PFGeoPoint(latitude: lat, longitude: long);
         point = PFGeoPoint(latitude: lat, longitude: long);
-//        point = PFGeoPoint(latitude: 33.7, longitude: -117.8);
-
         
         if let updateObject = PFUser.currentUser() as PFObject? {
             updateObject["Location"] = point;
@@ -112,16 +112,16 @@ class NewChatViewController: UIViewController, CLLocationManagerDelegate {
         
         alert.addAction(okayButton);
         self.presentViewController(alert, animated: true, completion: nil);
+        showChatOverview();
     }
     
     @IBAction func NewChatButton_Click(sender: AnyObject) {
-        
+
         self.locationManager.delegate = self
         self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
         self.locationManager.requestWhenInUseAuthorization()
         self.locationManager.startUpdatingLocation()
         
-//        var point2 = PFGeoPoint(latitude: self.lat, longitude: self.long)
         var query = PFQuery(className: "_User")
         query.whereKey("Location", nearGeoPoint: point, withinMiles: 50)
         query.limit = 10;
@@ -140,12 +140,11 @@ class NewChatViewController: UIViewController, CLLocationManagerDelegate {
         }
         
         if (PFUser.currentUser() != nil && userArray.isEmpty == false) {
-            
             for user in userArray{
                 if (user.objectId != PFUser.currentUser()?.objectId) {
                     
                     var user1 = PFUser.currentUser();
-//                    var user2 = userArray[0] as PFUser;
+                    //                    var user2 = userArray[0] as PFUser;
                     var user2 = user as PFUser;
                     var room = PFObject(className: "Room");
                     
@@ -160,7 +159,6 @@ class NewChatViewController: UIViewController, CLLocationManagerDelegate {
                         if error == nil {
                             if results!.count > 0 { // room already exists
                                 self.showAlert();
-                                self.showChatOverview();
                             }
                             else {
                                 room["user1"] = user1;
@@ -172,47 +170,14 @@ class NewChatViewController: UIViewController, CLLocationManagerDelegate {
                                         messageVC.room = room
                                         messageVC.incomingUser = user2
                                         self.navigationController?.pushViewController(messageVC, animated: true)
-                                        
                                     }
                                 })
                             }
                         }
                     })
-
                 }
             }
-//            var user1 = PFUser.currentUser();
-//            var user2 = userArray[0] as PFUser;
-//            var room = PFObject(className: "Room");
-//            
-//            // Setting up the MessageViewController
-//            let sb = UIStoryboard(name: "Main", bundle: nil)
-//            let messageVC = sb.instantiateViewControllerWithIdentifier("MessageViewController") as! MessageViewController;
-//            messageVC.navigationItem.setHidesBackButton(true, animated: false);
-//            let pred = NSPredicate(format: "user1 = %@ AND user2 = %@ OR user1 = %@ AND user2 = %@", user1!, user2, user2, user1!);
-//            let roomQuery = PFQuery(className: "Room", predicate: pred);
-//            
-//            roomQuery.findObjectsInBackgroundWithBlock({ (results: [AnyObject]?, error: NSError?) -> Void in
-//                if error == nil {
-//                    if results!.count > 0 { // room already exists
-//                        self.showAlert();
-//                        self.showChatOverview();
-//                    }
-//                    else {
-//                        room["user1"] = user1;
-//                        room["user2"] = user2;
-//                        
-//                        room.saveInBackgroundWithBlock({ (success: Bool, error: NSError?) -> Void in
-//                            if error == nil {
-//                                // Setup MessageViewController and Push to the MessageVC
-//                                messageVC.room = room
-//                                messageVC.incomingUser = user2
-//                                self.navigationController?.pushViewController(messageVC, animated: true)
-//                            }
-//                        })
-//                    }
-//                }
-//            })
         }
+        
     }
 }
