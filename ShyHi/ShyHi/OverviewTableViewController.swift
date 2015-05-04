@@ -151,13 +151,20 @@ class OverviewTableViewController: UITableViewController, CLLocationManagerDeleg
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! OverviewTableViewCell
+//        cell.newMessageIndicator.hidden = true
+        
         
         let targetUser = users[indexPath.row]
         
-        //cell.nameLabel.text = targetUser.username
-        cell.nameLabel.text = "Anonymous";
+        cell.nameLabel.text = "Anonymous"
+        
         let user1 = PFUser.currentUser()
         let user2 = users[indexPath.row]
+        
+        
+
+        
+        
         
         let pred = NSPredicate(format: "user1 = %@ AND user2 = %@ OR user1 = %@ AND user2 = %@", user1!, user2, user2, user1!)
         
@@ -169,7 +176,20 @@ class OverviewTableViewController: UITableViewController, CLLocationManagerDeleg
                     let messageQuery = PFQuery(className: "Message")
                     let room = results!.last as! PFObject
                     
-                    messageQuery.whereKey("Room", equalTo: room)
+                    // New Messages avaliable
+                    let unreadQuery = PFQuery(className: "UnreadMessage")
+                    unreadQuery.whereKey("user", equalTo: PFUser.currentUser()!)
+                    unreadQuery.whereKey("room", equalTo: room)
+                    
+                    unreadQuery.findObjectsInBackgroundWithBlock({ (results:[AnyObject]?, error:NSError?) -> Void in
+                        if error == nil {
+                            if results!.count > 0 {
+//                                cell.newMessageIndicator.hidden = false
+                            }
+                        }
+                    })
+                    
+                    messageQuery.whereKey("room", equalTo: room)
                     messageQuery.limit = 1
                     messageQuery.orderByDescending("createdAt")
                     messageQuery.findObjectsInBackgroundWithBlock({ (results:[AnyObject]?, error:NSError?) -> Void in
@@ -203,12 +223,15 @@ class OverviewTableViewController: UITableViewController, CLLocationManagerDeleg
                 }
             }
         }
+        
+        
+        
         return cell
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let sb = UIStoryboard(name: "Main", bundle: nil)
-        let messageVC = sb.instantiateViewControllerWithIdentifier("MessageViewController") as! MessageViewController
+        let messagesVC = sb.instantiateViewControllerWithIdentifier("MessageViewController") as! MessageViewController
         
         let user1 = PFUser.currentUser()
         let user2 = users[indexPath.row]
@@ -220,13 +243,33 @@ class OverviewTableViewController: UITableViewController, CLLocationManagerDeleg
         roomQuery.findObjectsInBackgroundWithBlock { (results:[AnyObject]?, error:NSError?) -> Void in
             if error == nil {
                 let room = results!.last as! PFObject
-                messageVC.room = room
-                messageVC.incomingUser = user2
+                messagesVC.room = room
+                messagesVC.incomingUser = user2
                 
-                self.navigationController?.pushViewController(messageVC, animated: true)
+                let unreadQuery = PFQuery(className: "UnreadMessage")
+                unreadQuery.whereKey("user", equalTo: PFUser.currentUser()!)
+                unreadQuery.whereKey("room", equalTo: room)
+                
+                unreadQuery.findObjectsInBackgroundWithBlock({ (results:[AnyObject]?, error:NSError?) -> Void in
+                    if error == nil {
+                        if results!.count > 0 {
+                            let unreadMessages = results as! [PFObject]
+                            
+                            for msg in unreadMessages{
+                                msg.deleteInBackgroundWithBlock(nil)
+                            }
+                            
+                        }
+                    }
+                })
+                
+                
+                self.navigationController?.pushViewController(messagesVC, animated: true)
                 
             }
         }
+        
+        
     }
     
     func showAlert() {

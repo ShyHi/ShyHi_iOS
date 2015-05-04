@@ -122,8 +122,10 @@ class NewChatViewController: UIViewController, CLLocationManagerDelegate {
         self.locationManager.requestWhenInUseAuthorization()
         self.locationManager.startUpdatingLocation()
         
+        var point2 = PFGeoPoint(latitude: 33.79, longitude: -117.85)
+        
         var query = PFQuery(className: "_User")
-        query.whereKey("Location", nearGeoPoint: point, withinMiles: 50)
+        query.whereKey("Location", nearGeoPoint: point2, withinMiles: 50)
         query.limit = 10;
         
         query.findObjectsInBackgroundWithBlock { (objects: [AnyObject]?, error: NSError?) -> Void in
@@ -178,6 +180,5 @@ class NewChatViewController: UIViewController, CLLocationManagerDelegate {
                 }
             }
         }
-        
     }
 }
