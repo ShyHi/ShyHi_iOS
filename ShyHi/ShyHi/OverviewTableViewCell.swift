@@ -10,6 +10,7 @@ import UIKit
 
 class OverviewTableViewCell: UITableViewCell {
 
+    @IBOutlet weak var newMessageIndicator: UIView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var lastMessageLabel: UILabel!

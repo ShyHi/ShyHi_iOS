@@ -151,7 +151,7 @@ class OverviewTableViewController: UITableViewController, CLLocationManagerDeleg
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! OverviewTableViewCell
-//        cell.newMessageIndicator.hidden = true
+        cell.newMessageIndicator.hidden = true
         
         
         let targetUser = users[indexPath.row]
@@ -182,7 +182,7 @@ class OverviewTableViewController: UITableViewController, CLLocationManagerDeleg
                     unreadQuery.findObjectsInBackgroundWithBlock({ (results:[AnyObject]?, error:NSError?) -> Void in
                         if error == nil {
                             if results!.count > 0 {
-//                                cell.newMessageIndicator.hidden = false
+                                cell.newMessageIndicator.hidden = false
                             }
                         }
                     })
@@ -292,8 +292,10 @@ class OverviewTableViewController: UITableViewController, CLLocationManagerDeleg
         self.locationManager.requestWhenInUseAuthorization()
         self.locationManager.startUpdatingLocation()
         
+        var point2 = PFGeoPoint(latitude: 33.79, longitude: -117.85)
+        
         var query = PFQuery(className: "_User")
-        query.whereKey("Location", nearGeoPoint: point, withinMiles: 50)
+        query.whereKey("Location", nearGeoPoint: point2, withinMiles: 50)// point2 is used for iOS simulator
         query.limit = 10;
         
         query.findObjectsInBackgroundWithBlock { (objects: [AnyObject]?, error: NSError?) -> Void in

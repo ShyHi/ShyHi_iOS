@@ -51,7 +51,7 @@ class MessageViewController: JSQMessagesViewController {
 //        
 //        incomingAvatar = JSQMessagesAvatarImageFactory.avatarImageWithUserInitials(incomingUsername.substringWithRange(NSMakeRange(0, 2)), backgroundColor: UIColor.blackColor(), textColor: UIColor.whiteColor(), font: UIFont.systemFontOfSize(14), diameter: UInt(kJSQMessagesCollectionViewAvatarSizeDefault))
         
-        incomingAvatar = JSQMessagesAvatarImageFactory.avatarImageWithUserInitials("Anon", backgroundColor: UIColor.blackColor(), textColor: UIColor.whiteColor(), font: UIFont.systemFontOfSize(14), diameter: UInt(kJSQMessagesCollectionViewAvatarSizeDefault))
+        incomingAvatar = JSQMessagesAvatarImageFactory.avatarImageWithUserInitials("Anon", backgroundColor: UIColor.blackColor(), textColor: UIColor.whiteColor(), font: UIFont.systemFontOfSize(12), diameter: UInt(kJSQMessagesCollectionViewAvatarSizeDefault))
         
         let bubbleFactory = JSQMessagesBubbleImageFactory()
         
@@ -134,17 +134,17 @@ class MessageViewController: JSQMessagesViewController {
             if error == nil {
                 self.loadMessages()
                 
-                let pushQuery = PFInstallation.query()
-                pushQuery!.whereKey("user", equalTo: self.incomingUser)
-                
-                let push = PFPush()
-                push.setQuery(pushQuery)
-                
-                let pushDict = ["alert":text,"badge":"increment","sound":"notification.caf"]
-                
-                push.setData(pushDict)
-                
-                push.sendPushInBackgroundWithBlock(nil)
+//                let pushQuery = PFInstallation.query()
+//                pushQuery!.whereKey("user", equalTo: self.incomingUser)
+//                
+//                let push = PFPush()
+//                push.setQuery(pushQuery)
+//                
+//                let pushDict = ["alert":text,"badge":"increment","sound":"notification.caf"]
+//                
+//                push.setData(pushDict)
+//                
+//                push.sendPushInBackgroundWithBlock(nil)
                 
                 self.room["lastUpdate"] = NSDate()
                 self.room.saveInBackgroundWithBlock(nil)

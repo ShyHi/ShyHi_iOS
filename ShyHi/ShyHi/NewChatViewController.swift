@@ -12,6 +12,7 @@ import CoreLocation
 class NewChatViewController: UIViewController, CLLocationManagerDelegate {
 
     @IBOutlet weak var NewChatButton: UIButton!
+    @IBOutlet weak var ViewConversationsButton: UIButton!
     
     let locationManager = CLLocationManager()
     var point: PFGeoPoint = PFGeoPoint(latitude: 0, longitude: 0);
@@ -20,10 +21,6 @@ class NewChatViewController: UIViewController, CLLocationManagerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        if PFUser.currentUser() != nil {
-            showChatOverview();
-        }
         
         PFUser.enableAutomaticUser();
         PFUser.currentUser()!.incrementKey("RunCount");
@@ -112,7 +109,12 @@ class NewChatViewController: UIViewController, CLLocationManagerDelegate {
         
         alert.addAction(okayButton);
         self.presentViewController(alert, animated: true, completion: nil);
+    }
+    
+    @IBAction func ViewConversationsButton_Click(sender: AnyObject) {
+        
         showChatOverview();
+        
     }
     
     @IBAction func NewChatButton_Click(sender: AnyObject) {
@@ -125,7 +127,7 @@ class NewChatViewController: UIViewController, CLLocationManagerDelegate {
         var point2 = PFGeoPoint(latitude: 33.79, longitude: -117.85)
         
         var query = PFQuery(className: "_User")
-        query.whereKey("Location", nearGeoPoint: point2, withinMiles: 50)
+        query.whereKey("Location", nearGeoPoint: point2, withinMiles: 50) // point2 is used for iOS simulator
         query.limit = 10;
         
         query.findObjectsInBackgroundWithBlock { (objects: [AnyObject]?, error: NSError?) -> Void in
