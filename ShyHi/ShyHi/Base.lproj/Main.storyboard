@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7531" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="L2f-Sz-Ya4">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="L2f-Sz-Ya4">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7520"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -33,13 +33,28 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xET-zv-763">
+                                <rect key="frame" x="70" y="488" width="180" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="180" id="71B-Fr-6nF"/>
+                                    <constraint firstAttribute="height" constant="30" id="n6M-qd-dQ9"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="18"/>
+                                <state key="normal" title="View Conversations">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="ViewConversationsButton_Click:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="Hn3-k7-XS0"/>
+                                </connections>
+                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YkM-24-lIp">
-                                <rect key="frame" x="118" y="457" width="85" height="36"/>
+                                <rect key="frame" x="118" y="448" width="85" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="85" id="GnJ-w4-m5o"/>
-                                    <constraint firstAttribute="height" constant="36" id="tqK-Ua-Mzd"/>
+                                    <constraint firstAttribute="height" constant="30" id="tqK-Ua-Mzd"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="18"/>
                                 <state key="normal" title="New Chat">
                                     <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -55,21 +70,14 @@
                                     <constraint firstAttribute="width" constant="260" id="HEO-2G-VGP"/>
                                 </constraints>
                             </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xET-zv-763">
-                                <rect key="frame" x="93" y="481" width="135" height="30"/>
-                                <state key="normal" title="View Conversations">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="ViewConversationsButton_Click:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="Hn3-k7-XS0"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="fgl-T8-0Y3" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="50" id="1IN-Rl-S2q"/>
-                            <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="YkM-24-lIp" secondAttribute="bottom" constant="75" id="Xdb-xg-l1Q"/>
+                            <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="xET-zv-763" secondAttribute="bottom" constant="50" id="As1-xQ-lIS"/>
                             <constraint firstAttribute="centerX" secondItem="YkM-24-lIp" secondAttribute="centerX" id="YoA-ia-hBK"/>
+                            <constraint firstItem="xET-zv-763" firstAttribute="top" secondItem="YkM-24-lIp" secondAttribute="bottom" constant="10" id="bMo-sX-bGQ"/>
+                            <constraint firstAttribute="centerX" secondItem="xET-zv-763" secondAttribute="centerX" id="lJB-Ag-cpb"/>
                             <constraint firstAttribute="centerX" secondItem="fgl-T8-0Y3" secondAttribute="centerX" id="nIN-Fs-Aeh"/>
                         </constraints>
                     </view>
