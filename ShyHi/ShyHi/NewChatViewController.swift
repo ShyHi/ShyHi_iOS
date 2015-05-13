@@ -16,8 +16,8 @@ class NewChatViewController: UIViewController, CLLocationManagerDelegate {
     
     let locationManager = CLLocationManager()
     var point: PFGeoPoint = PFGeoPoint(latitude: 0, longitude: 0);
-    
     var userArray = [PFUser]();
+    var index = 0;
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -144,43 +144,44 @@ class NewChatViewController: UIViewController, CLLocationManagerDelegate {
         }
         
         if (PFUser.currentUser() != nil && userArray.isEmpty == false) {
-            for user in userArray{
-                if (user.objectId != PFUser.currentUser()?.objectId) {
-                    
-                    var user1 = PFUser.currentUser();
-                    //                    var user2 = userArray[0] as PFUser;
-                    var user2 = user as PFUser;
-                    var room = PFObject(className: "Room");
-                    
-                    // Setting up the MessageViewController
-                    let sb = UIStoryboard(name: "Main", bundle: nil)
-                    let messageVC = sb.instantiateViewControllerWithIdentifier("MessageViewController") as! MessageViewController;
-                    messageVC.navigationItem.setHidesBackButton(true, animated: false);
-                    let pred = NSPredicate(format: "user1 = %@ AND user2 = %@ OR user1 = %@ AND user2 = %@", user1!, user2, user2, user1!);
-                    let roomQuery = PFQuery(className: "Room", predicate: pred);
-                    
-                    roomQuery.findObjectsInBackgroundWithBlock({ (results: [AnyObject]?, error: NSError?) -> Void in
-                        if error == nil {
-                            if results!.count > 0 { // room already exists
-                                self.showAlert();
-                            }
-                            else {
-                                room["user1"] = user1;
-                                room["user2"] = user2;
-                                
-                                room.saveInBackgroundWithBlock({ (success: Bool, error: NSError?) -> Void in
-                                    if error == nil {
-                                        // Setup MessageViewController and Push to the MessageVC
-                                        messageVC.room = room
-                                        messageVC.incomingUser = user2
-                                        self.navigationController?.pushViewController(messageVC, animated: true)
-                                    }
-                                })
-                            }
+            if (userArray[index].objectId != PFUser.currentUser()?.objectId) {
+                
+                var user1 = PFUser.currentUser();
+                //                    var user2 = userArray[0] as PFUser;
+                var user2 = userArray[index] as PFUser;
+                var room = PFObject(className: "Room");
+                
+                // Setting up the MessageViewController
+                let sb = UIStoryboard(name: "Main", bundle: nil)
+                let messageVC = sb.instantiateViewControllerWithIdentifier("MessageViewController") as! MessageViewController;
+                messageVC.navigationItem.setHidesBackButton(true, animated: false);
+                let pred = NSPredicate(format: "user1 = %@ AND user2 = %@ OR user1 = %@ AND user2 = %@", user1!, user2, user2, user1!);
+                let roomQuery = PFQuery(className: "Room", predicate: pred);
+                
+                roomQuery.findObjectsInBackgroundWithBlock({ (results: [AnyObject]?, error: NSError?) -> Void in
+                    if error == nil {
+                        if results!.count == 0 { // room already exists
+                            room["user1"] = user1;
+                            room["user2"] = user2;
+                            
+                            room.saveInBackgroundWithBlock({ (success: Bool, error: NSError?) -> Void in
+                                if error == nil {
+                                    // Setup MessageViewController and Push to the MessageVC
+                                    messageVC.room = room
+                                    messageVC.incomingUser = user2
+                                    self.navigationController?.pushViewController(messageVC, animated: true);
+                                    ++self.index;
+                                }
+                            })
                         }
-                    })
-                }
+                        else {
+                 
+                            // self.showAlert();
+                        }
+                    }
+                })
             }
+            
         }
     }
 }
